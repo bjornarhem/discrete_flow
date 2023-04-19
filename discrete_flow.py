@@ -100,15 +100,28 @@ class CWComplex:
 
 def covers(x, y):
     # Returns true if x covers y, i.e., if rho(x)=rho(y)+1 and x > y
-    if x.dim != y.dim + 1:
+    assert x.dim == y.dim + 1
+    
+    if len(x.path) == len(y.path) + 1:
+        longest = x.path
+        shortest = y.path
+    elif len(x.path) == len(y.path) - 1:
+        longest = y.path
+        shortest = x.path
+    else:
         return False
 
-    if len(x.path) == len(y.path) + 1:
-        # There are probably slightly faster ways to do this
-        return len(set(x.path).difference(y.path)) == 1
-    elif len(x.path) == len(y.path) - 1:
-        return len(set(y.path).difference(x.path)) == 1
-    return False
+    diffs = 0
+    j = 0
+    for i in range(len(longest)):
+        if longest[i] != shortest[j]:
+            diffs += 1
+            if diffs > 1:
+                return False
+        else:
+            j += 1
+
+    return True
 
 def get_boundary(path, Hom_lower_rank):
     bdy = []
