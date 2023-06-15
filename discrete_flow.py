@@ -93,9 +93,8 @@ class CWComplex:
                     plt.plot([x, x2], [y, y2], color=color)
                 plt.plot(x, y, 'k.')
                 plt.annotate(cell.display_name, (x, y), rotation=20)
-        plt.xticks([])
-        plt.yticks([])
-        plt.savefig("CW_lattice.pdf")
+        plt.axis('off')
+        plt.savefig("CW_lattice.pdf", bbox_inches="tight")
         plt.show()
 
 def covers(x, y):
