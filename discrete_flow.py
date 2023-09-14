@@ -74,7 +74,9 @@ class CWComplex:
                     if id(face) in cells_unplaced:
                         cells_ordered[rank-1].append(face)
                         cells_unplaced.remove(id(face))
-            cells_ordered[rank-1].extend(list(cells_unplaced))
+            for cell in self.cells[rank-1]:
+                if id(cell) in cells_unplaced:
+                    cells_ordered[rank-1].append(cell)
         
         # Create mapping from cells to coordinates (y-axis being rank), and plot points and edges
         coords = {}
