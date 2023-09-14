@@ -1,6 +1,8 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
+from utils import flatten
+
 class Cell:
     """
     Class representing a cell of a regular CW complex
@@ -19,8 +21,27 @@ class Cell:
             assert cell.dim == dim-1
 
         self.dim = dim
-        self.boundary = boundary
         self.display_name = display_name
+        self.boundary = boundary
+        self.set_faces()
+
+    def set_faces(self):
+        self.faces = get_all_faces(self.boundary)
+
+def get_all_faces(boundary):
+    # Returns the proper faces of a cell, given the boundary (codim 1 faces)
+    face_ids = set()
+    faces = []
+    for cell in boundary:
+        assert id(cell) not in face_ids
+        faces.append(cell)
+        face_ids.add(id(cell))
+        for face in cell.faces:
+            # We don't want to repeat cells in faces
+            if id(face) not in face_ids:
+                faces.append(face)
+            face_ids.add(id(face))
+    return faces
     
 def gradient_path_rank(path):
     rank = 0
@@ -52,14 +73,21 @@ class GradientPath(Cell):
 
 class CWComplex:
     def __init__(self, cells):
-        max_dim = max([c.dim for c in cells])
         self.cells = []
+        if len(cells) == 0:
+            return
+
+        max_dim = max([c.dim for c in cells])
         for i in range(max_dim+1):
             self.cells.append([])
         for cell in cells:
             self.cells[cell.dim].append(cell)
 
     def plot_lattice(self):
+        if len(self.cells) == 0:
+            print("Complex has no cells")
+            return
+ 
         # TODO: can get better ordering: order top layer too so RP2 example gives disjoint component
         # Order the cells to get a nicer visual presentation. Try to minimize edges crossing.
         cells_ordered = []
@@ -141,9 +169,7 @@ class FloHomPoset(CWComplex):
             # Rank 0 cells have empty boundary
             for path in self.cells[rank]:
                 path.boundary = get_boundary(path, self.cells[rank-1])
-
-def flatten(l):
-    return [item for sublist in l for item in sublist]
+                path.set_faces()
 
 def get_directed_graph(cells, mu, source, target):
     # Get the directed graph where v -> w if w < v or mu(v) = w 
