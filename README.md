@@ -1,1 +1,2 @@
-# discrete_flow
+Code for computing the discrete flow category of a regular CW complex equipped with a discrete Morse function, and its associated spectral sequence.
+See ``discrete_flow_computation.ipynb`` and ``torus.ipynb`` for examples of computing the Hom posets of the discrete flow category. See ``spectral_sequence.ipynb`` for examples of computing the spectral sequence associated to the discrete flow category.
