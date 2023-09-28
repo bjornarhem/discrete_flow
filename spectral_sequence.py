@@ -81,8 +81,6 @@ class FloSpecSeq:
                             # factor_idx is None when a factor is degenerate
                             del1_p1[factor_idx,i] = (-1)**j
 
-            np.set_printoptions(threshold=np.inf)
-            print(f"Rank of del1_{p},1", np.linalg.matrix_rank(del1_p1))
             del1_x1.append(del1_p1)
 
         # 3. Compute \partial^0_01 to get E1_01 and E1_00
